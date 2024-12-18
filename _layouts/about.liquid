@@ -1,0 +1,135 @@
+---
+layout: default
+---
+
+<article>
+
+<header class="post-header">
+    <p class="desc">{{ page.subtitle }}</p>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</header>
+
+<!-- Original Layout for Large Screens -->
+<div class="post" style="display: flex; flex-wrap: wrap;">
+    {% if page.profile %}
+        <div class="profile" style="flex: 1;">
+            {% if page.profile.image %}
+                {% assign profile_image_path = page.profile.image | prepend: 'assets/img/' %}
+                {% if page.profile.image_circular %}
+                    {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
+                {% else %}
+                    {% assign profile_image_class = 'img-fluid z-depth-1 rounded' %}
+                {% endif %}
+                {% capture sizes %}(min-width: {{site.max_width}}) {{ site.max_width | minus: 30 | times: 0.3 }}px, (min-width: 576px) 30vw, 95vw{% endcapture %}
+                {% include figure.liquid loading="eager" path=profile_image_path class=profile_image_class sizes=sizes alt=page.profile.image cache_bust=true %}
+            {% endif %}
+            {% if page.profile.more_info %}
+                <div class="more-info">{{ page.profile.more_info }}</div>
+            {% endif %}
+        </div>
+    {% endif %}
+    
+    {% if page.news and site.announcements.enabled %}
+        <div style="flex: 2;">
+            <h2>
+                <a href="{{ '/news/' | relative_url }}" style="color: inherit">news</a>
+            </h2>
+            <div class="news-announcements" style="width: 100%;">
+                <div class="extra-text">
+                    {{ page.extra_text }}
+                </div>
+                {% include news.liquid limit=true %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Biography Section (Displayed in both layouts) -->
+<div class="biography" style="width: 100%;">
+    {{ content }}
+</div>
+
+<!-- Responsive Layout for Small Screens -->
+<style>
+    /* Large screens keep the original flex layout */
+    @media (min-width: 769px) {
+        .post {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    }
+
+    /* Small screens (tablets and mobile) show the modified layout */
+    @media (max-width: 768px) {
+        .post, .biography, .news, .profile {
+            display: block;
+            width: 85%; /* Ensure all elements take up 85% of the screen width */
+            margin: 0 auto; /* Center the elements */
+        }
+
+        .profile {
+            margin-bottom: 20px; /* Add spacing between stacked elements */
+        }
+
+        .more-info, .extra-text {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .biography {
+            margin-bottom: 20px; /* Add spacing */
+        }
+
+        .news {
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 30px; /* More spacing for smaller screens */
+        }
+
+        @media (max-width: 576px) {
+            p {
+                margin-bottom: 40px; /* Even more spacing for very small screens */
+            }
+        }
+
+        .news-announcements p {
+            margin-bottom: 30px;
+        }
+
+        .extra-text {
+            margin-bottom: 30px;
+        }
+    }
+</style>
+
+<!-- Latest posts -->
+{% if site.latest_posts.enabled %}
+<h2>
+    <a href="{{ '/blog/' | relative_url }}" style="color: inherit">latest posts</a>
+</h2>
+{% include latest_posts.liquid %}
+{% endif %}
+
+<!-- Selected papers -->
+{% if page.selected_papers %}
+<h2>
+    <a href="{{ '/publications/' | relative_url }}" style="color: inherit">selected publications</a>
+</h2>
+{% include selected_papers.liquid %}
+{% endif %}
+
+<!-- Social -->
+{% if page.social %}
+<div class="social">
+    <div class="contact-icons">{% include social.liquid %}</div>
+    <div class="contact-note">{{ site.contact_note }}</div>
+</div>
+{% endif %}
+
+{% if site.newsletter.enabled and site.footer_fixed %}
+{% include scripts/newsletter.liquid center=true %}
+{% endif %}
+
+</article>

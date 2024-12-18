@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="{{ site.lang }}">
+  <!-- Head -->
+  <head>
+    {% if page.redirect %}
+      {% if page.redirect == true %}
+        {% assign redirect = site.baseurl | append: '/' %}
+      {% elsif page.redirect contains '://' %}
+        {% assign redirect = page.redirect %}
+      {% else %}
+        {% assign redirect = page.redirect | relative_url %}
+      {% endif %}
+      <meta http-equiv="refresh" content="3; url={{ redirect }}">
+    {% endif %}
+    {% include head.liquid %}
+    
+    <style>
+      <style>
+  /* Custom CSS to pin the TOC to the side */
+  #toc-sidebar {
+    position: sticky;
+    top: 100px; /* Adjust the distance from the top of the screen */
+    left: 20px; /* Adjust for left-side pinning, change to right for right-side */
+    max-width: 250px; /* Set a max width for the sidebar */
+    height: calc(100vh - 120px); /* Ensure the sidebar doesn't overflow the viewport */
+    overflow-y: auto; /* Allow scrolling if TOC is long */
+    padding-right: 15px; /* Add padding to avoid text touching the edge */
+  }
+
+  /* Ensure the content area does not overlap with the sidebar */
+  .content-area {
+    margin-left: 270px; /* Adjust this margin to match the width of the sidebar */
+  }
+
+  /* For smaller screens, reset the sidebar's fixed positioning */
+  @media (max-width: 768px) {
+    #toc-sidebar {
+      position: static; /* Remove sticky behavior on small screens */
+      max-width: 100%;
+      height: auto; /* Reset the height */
+    }
+    .content-area {
+      margin-left: 0;
+    }
+  }
+</style>
+
+  </head>
+
+  <!-- Body -->
+  <body class="{% if site.navbar_fixed %}fixed-top-nav{% endif %} {% unless site.footer_fixed %}sticky-bottom-footer{% endunless %}">
+    <!-- Header -->
+    {% include header.liquid %}
+
+    <!-- Content -->
+    <div class="container mt-5">
+      {% if page.toc and page.toc.sidebar %}
+        {% if page.toc.sidebar == "right" %}
+        <div class="row">
+          <!-- main content area -->
+          <div class="col-sm-9">
+            {{ content }}
+          </div>
+          <!-- sidebar, which will move to the top on a small screen -->
+          <div class="col-sm-3">
+            <nav id="toc-sidebar" class="sticky-top" data-toggle = "toc"></nav>
+          </div>
+        </div>
+        {% else %}
+        <div class="row">
+          <!-- sidebar, which will move to the top on a small screen -->
+          <div class="col-sm-3">
+            <nav id="toc-sidebar" class="sticky-top" data-toggle = "toc"></nav>
+          </div>
+          <!-- main content area -->
+          <div class="col-sm-9">
+            {{ content }}
+          </div>
+        </div>
+        {% endif %}
+      {% else %}
+        {{ content }}
+      {% endif %}
+    </div>
+
+    <!-- Footer -->
+    {% include footer.liquid %}
+
+    <!-- JavaScripts -->
+    {% include scripts/jquery.liquid %}
+    {% include scripts/bootstrap.liquid %}
+    {% include scripts/masonry.liquid %}
+    {% include scripts/mermaid.liquid %}
+    {% include scripts/diff2html.liquid %}
+    {% include scripts/leaflet.liquid %}
+    {% include scripts/chartjs.liquid %}
+    {% include scripts/echarts.liquid %}
+    {% include scripts/vega.liquid %}
+    {% include scripts/tikzjax.liquid %}
+    {% include scripts/typograms.liquid %}
+    {% include scripts/misc.liquid %}
+    {% include scripts/badges.liquid %}
+    {% include scripts/mathjax.liquid %}
+    {% include scripts/pseudocode.liquid %}
+    {% include scripts/analytics.liquid %}
+    {% include scripts/progressBar.liquid %}
+    {% include scripts/wechatModal.liquid %}
+    {% include scripts/imageLayouts.liquid %}
+    {% include scripts/jekyll_tabs.liquid %}
+    {% include scripts/back_to_top.liquid %}
+    {% include scripts/search.liquid %}
+  </body>
+</html>
